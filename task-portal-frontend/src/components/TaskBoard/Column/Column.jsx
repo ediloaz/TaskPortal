@@ -1,7 +1,14 @@
-const Column = ({ title }) => {
+import Card from '../Card/Card'
+
+import './Column.sass'
+
+const Column = ({ title, cards }) => {
   
   return (
-    <div>{title}</div>
+    <div className='column-container' >
+      <span className='title'>{title}</span>
+      {cards?.map( (cardProps) => <Card {...cardProps} /> )}
+    </div>
   )
 }
 export default Column

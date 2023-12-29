@@ -1,8 +1,12 @@
 import TaskBoard from 'containers/TaskBoard/TaskBoard'
+import HeaderBar from 'containers/HeaderBar/HeaderBar'
 
 const Board = () => {
   return (
-    <TaskBoard />
+    <>
+      <HeaderBar/>
+      <TaskBoard />
+    </>
   )
 }
 
