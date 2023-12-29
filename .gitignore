@@ -1,16 +1,20 @@
-# Compiled class file
+# Ignore compiled class files
 *.class
 
-# Log file
+# Ignore Quarkus build directories
+target/
+.quarkus/
+
+# Ignore logs
 *.log
 
-# BlueJ files
+# Ignore BlueJ files
 *.ctxt
 
-# Mobile Tools for Java (J2ME)
+# Ignore Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Ignore package files
 *.jar
 *.war
 *.nar
@@ -19,6 +23,18 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Ignore virtual machine crash logs
 hs_err_pid*
 replay_pid*
+
+# Ignore Node.js dependencies (add more entries if needed)
+task-portal-frontend/node_modules/
+
+# Ignore build artifacts for React
+task-portal-frontend/build/
+task-portal-frontend/dist/
+task-portal-frontend/*.js.map
+
+# Ignore files generated during the build
+task-portal-frontend/.DS_Store
+task-portal-frontend/Thumbs.db
