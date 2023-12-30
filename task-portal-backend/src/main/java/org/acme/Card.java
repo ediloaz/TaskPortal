@@ -1,6 +1,7 @@
 package org.acme;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
@@ -14,6 +15,9 @@ public class Card extends PanacheEntity {
 
     @Column(name = "status")
     public String status;
+
+    // @ManyToOne
+    // public Account Account;
 
     public Card() {}
 
