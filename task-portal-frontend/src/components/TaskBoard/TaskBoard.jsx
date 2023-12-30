@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -10,10 +9,7 @@ import "./TaskBoard.sass";
 
 
 const TaskBoard = ({ cards }) => {
-  const addCard = () => {
-    // eslint-disable-next-line no-console
-    console.log("	🎮 22", 11);
-  };
+  const addCard = () => {};
 
   return (
     <div className="task-board-container">

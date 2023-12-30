@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
-import { COLUMNS, DEFAULT_COLUMN } from 'constants/column'
+import { DEFAULT_COLUMN } from 'constants/column'
+import { CARDS_MOCKUP } from 'constants/card'
 import { BACKEND_URL } from 'constants/url'
 import TaskBoardComponent from 'components/TaskBoard/TaskBoard'
 
@@ -28,6 +29,10 @@ const TaskBoard = () => {
         const response = await fetch(`${BACKEND_URL}/${CARDS_GET_URL}`);
         
         if (!response.ok) {
+          const formattedCards = formatCardsByColumn(CARDS_MOCKUP)
+
+          setCards(formattedCards);
+
           throw new Error('Network response was not ok');
         }
 
@@ -37,6 +42,10 @@ const TaskBoard = () => {
 
         setCards(formattedCards);
       } catch (error) {
+        const formattedCards = formatCardsByColumn(CARDS_MOCKUP)
+
+          setCards(formattedCards);
+          
         console.error('Error fetching data:', error.message);
       }
     };
