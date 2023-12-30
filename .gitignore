@@ -31,7 +31,6 @@ replay_pid*
 task-portal-frontend/node_modules/
 
 # Ignore build artifacts for React
-task-portal-frontend/build/
 task-portal-frontend/dist/
 task-portal-frontend/*.js.map
 
