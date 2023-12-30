@@ -40,16 +40,15 @@ public class CardResource {
     }
 
     @POST
-    @Path("/post")
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCard(Card card) {
         System.out.println("Received card: " + card);
-        // card.persist();
+        card.persist();
 
         return Response.status(Response.Status.CREATED).build();
     }
-
+    
     @DELETE
     @Path("/{id}")
     @Transactional
