@@ -9,7 +9,8 @@ const Card = ({ title, description, user }) => {
   return (
     <CardMui className="card-container">
       <CardContent>
-        title: {title}, description: {description}, user: {user}
+        <p className="card-title">{title}</p>
+        <p className="card-description">{description}</p>
       </CardContent>
       <CardActions>
         <Button size="medium">Ver más</Button>
