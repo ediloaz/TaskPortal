@@ -1,16 +1,13 @@
-import TaskBoard from 'containers/TaskBoard/TaskBoard'
-import HeaderBar from 'containers/HeaderBar/HeaderBar'
-import Authentication from 'containers/Authentication/Authentication'
-
+import TaskBoard from "containers/TaskBoard/TaskBoard";
+import HeaderBar from "containers/HeaderBar/HeaderBar";
 
 const Board = () => {
   return (
     <>
-      <Authentication />
-      <HeaderBar/>
+      <HeaderBar />
       <TaskBoard />
     </>
-  )
-}
+  );
+};
 
-export default Board
+export default Board;

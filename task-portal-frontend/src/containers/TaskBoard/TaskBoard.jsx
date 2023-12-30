@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import { DEFAULT_COLUMN } from 'constants/column'
-import { CARDS_MOCKUP } from 'constants/card'
+import { CARDS_MOCKUP, CARDS_STORAGE_ID } from 'constants/card'
 import { BACKEND_URL } from 'constants/url'
 import TaskBoardComponent from 'components/TaskBoard/TaskBoard'
 
@@ -19,43 +19,51 @@ const formatCardsByColumn = (cards) => {
   }, {});
 };
 
+const retrievedObject = localStorage.getItem(CARDS_STORAGE_ID);
+const parsedCards = JSON.parse(retrievedObject);
+
+if (!parsedCards) {
+  const serializedObject = JSON.stringify(CARDS_MOCKUP);
+  localStorage.setItem(CARDS_STORAGE_ID, serializedObject);
+}
 
 const TaskBoard = () => {
   const [cards, setCards] = useState([])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/${CARDS_GET_URL}`);
-        
-        if (!response.ok) {
-          const formattedCards = formatCardsByColumn(CARDS_MOCKUP)
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/${CARDS_GET_URL}`);
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
-          setCards(formattedCards);
+      const result = await response.json();
 
-          throw new Error('Network response was not ok');
-        }
+      const formattedCards = formatCardsByColumn(result)
 
-        const result = await response.json();
-
-        const formattedCards = formatCardsByColumn(result)
+      setCards(formattedCards);
+    } catch (error) {
+        const retrievedObject = localStorage.getItem(CARDS_STORAGE_ID);
+        const parsedCards = JSON.parse(retrievedObject);
+        const formattedCards = formatCardsByColumn(parsedCards)
 
         setCards(formattedCards);
-      } catch (error) {
-        const formattedCards = formatCardsByColumn(CARDS_MOCKUP)
+        
+      console.error('Error fetching data:', error.message);
+    }
+  };
 
-          setCards(formattedCards);
-          
-        console.error('Error fetching data:', error.message);
-      }
-    };
-
-    // Llamar a la función para realizar la solicitud
+  useEffect(() => {
     fetchData();
   }, [])
+
+  const addNewCard = () => {
+    fetchData()
+  }
   
   return (
-    <TaskBoardComponent cards={cards} />
+    <TaskBoardComponent cards={cards} addNewCard={addNewCard} />
   )
 }
 

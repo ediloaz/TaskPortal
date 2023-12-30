@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { useState } from 'react';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,11 +12,16 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 
+import Authentication from 'containers/Authentication/Authentication'
+
 const settings = ['Logout'];
 
 const HeaderBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -34,6 +40,7 @@ const HeaderBar = () => {
 
   return (
     <AppBar position="static">
+      <Authentication isOpen={open} onClose={handleClose} />
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <LocationCityIcon sx={{ mr: 1 }} />
@@ -55,6 +62,21 @@ const HeaderBar = () => {
 
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box sx={{ flexGrow: 0 }}>
+          <Typography
+            variant="h6"
+            noWrap
+            onClick={handleOpen}
+            component="a"
+            sx={{
+              mr: 2,
+              fontWeight: 400,
+              color: 'inherit',
+              textDecoration: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            Sign in
+          </Typography>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
