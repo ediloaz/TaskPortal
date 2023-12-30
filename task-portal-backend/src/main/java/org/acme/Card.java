@@ -12,10 +12,14 @@ public class Card extends PanacheEntity {
     @Column(name = "description")
     public String description;
 
+    @Column(name = "status")
+    public String status;
+
     public Card() {}
 
     public Card(String title, String description) {
         this.title = title;
         this.description = description;
+        this.status = status;
     }
 }
