@@ -18,14 +18,14 @@ public class Account extends PanacheEntity {
     @Column(name = "csrf_token")
     public String csrfToken;
 
-    // @Column(name = "age")
-    // public String age;
+    @Column(name = "age")
+    public String age;
 
-    // @Column(name = "gender")
-    // public String gender;
+    @Column(name = "gender")
+    public String gender;
 
-    // @Column(name = "telephone")
-    // public String telephone;
+    @Column(name = "phone")
+    public String phone;
 
     public Account() {}
 
@@ -49,5 +49,9 @@ public class Account extends PanacheEntity {
 
     public void setCsrfToken(String csrfToken) {
         this.csrfToken = csrfToken;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

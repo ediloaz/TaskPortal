@@ -1,6 +1,7 @@
 package org.acme;
 
 import org.acme.util.CsrfUtil;
+import org.acme.util.SecurityUtil;
 import org.jboss.logging.Logger;
 
 import java.util.Set;
@@ -40,26 +41,42 @@ public class AccountResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(Account loginInfo) {
-        Optional<Account> optionalAccount = Account.find("username = ?1 and password = ?2", loginInfo.getUsername(), loginInfo.getPassword()).firstResultOptional();
+        try {
+            Optional<Account> optionalAccount = Account.find("username = ?1", loginInfo.getUsername()).firstResultOptional();
+            
+            if (optionalAccount.isPresent()) {
+                Account existingAccount = optionalAccount.get();
+                
+                // Check password
+                String passwordToCheck = loginInfo.getPassword();
+                String passwordStored = existingAccount.getPassword();
+                boolean isPasswordCorrect = SecurityUtil.verifyBCryptPassword(passwordStored, passwordToCheck);
 
-        if (optionalAccount.isPresent()) {
-            LOG.info("Usuario autenticado: " + loginInfo.getUsername());
-            Account existingAccount = optionalAccount.get();
+                if (isPasswordCorrect) {
+                    LOG.info("User logged: " + loginInfo.getUsername());
 
-            String csrfToken = CsrfUtil.getNewCsrfToken();
-            existingAccount.setCsrfToken(csrfToken);
-
-            existingAccount.persist();
-
-            return Response.ok()
-               .entity(optionalAccount.get())
-               .header("X-CSRF-Token", csrfToken)
-               .build();
-        } else {
-            LOG.info("Usuario intentó acceder con el username: " + loginInfo.getUsername() + " y el password: " + loginInfo.getPassword());
-            return Response.status(Response.Status.UNAUTHORIZED)
-                   .entity("Credenciales de inicio de sesión incorrectas.")
-                   .build();
+                    // Generate new token
+                    String csrfToken = CsrfUtil.getNewCsrfToken();
+                    existingAccount.setCsrfToken(csrfToken);
+    
+                    existingAccount.persist();
+    
+                    return Response.ok(existingAccount).build();
+                } else {
+                    LOG.info("Usuario intentó acceder con el username: " + loginInfo.getUsername() + " y el password: " + loginInfo.getPassword());
+                    return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("Credenciales de inicio de sesión incorrectas.")
+                        .build();
+                }
+            } else {
+                return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("Not found username.")
+                    .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("Error in login, message: " + e.getMessage())
+                .build();
         }
     }
 
@@ -72,7 +89,9 @@ public class AccountResource {
         Optional<Account> optionalAccount = Account.find("username = ?1 and csrfToken = ?2", loginInfo.getUsername(), loginInfo.getCsrfToken()).firstResultOptional();
 
         if (optionalAccount.isPresent()) {
-            return Response.ok().build();
+            Account existingAccount = optionalAccount.get();
+
+            return Response.ok(existingAccount).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Credenciales de inicio de sesión incorrectas.").build();
         }
@@ -103,27 +122,30 @@ public class AccountResource {
             .build();
     }
 
-    // @POST
-    // @Path("/signup")
-    // @Transactional
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response registerAccount(Account newAccount) {
-    //     if (accountExists(newAccount.getUsername())) {
-    //         LOG.info("Se intentó registrar el usuario '" + newAccount.getUsername() + "', pero ya existe.");
-    //         throw new WebApplicationException("El username ya está registrado.", Response.Status.BAD_REQUEST);
-    //     }
-    //     LOG.info("\n\n" + newAccount);
-    //     LOG.info(newAccount);
-    //     System.out.println(newAccount);
-    //     LOG.info("\n\n");
+    @POST
+    @Path("/signup")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerAccount(Account newAccount) {
+        if (accountExists(newAccount.getUsername())) {
+            LOG.info("The username is existing: '" + newAccount.getUsername() + "'");
+            
+            return Response.status(Response.Status.UNAUTHORIZED)
+                .entity("The username is existing, choose another.")
+                .build();
+        }
 
-    //     newAccount.persist();
-        
-    //     LOG.info("Usuario registrado22: " + newAccount.getUsername());
+        // Generate encrypted password
+        String password = newAccount.getPassword();
+        newAccount.setPassword(SecurityUtil.createBCryptPassword(password));
+        newAccount.setCsrfToken(CsrfUtil.getNewCsrfToken());
 
-    //     return Response.ok(newAccount).status(Response.Status.CREATED).build();
-    // }
+        newAccount.persist();
+        LOG.info("New user: " + newAccount.getUsername());
+
+        return Response.ok(newAccount).status(Response.Status.CREATED).build();
+    }
 
     // Método auxiliar para verificar si un username ya existe en la base de datos
     private boolean accountExists(String username) {
