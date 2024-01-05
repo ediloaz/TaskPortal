@@ -5,7 +5,9 @@ import CardActions from '@mui/material/CardActions';
 
 import './Card.sass'
 
-const Card = ({ title, description, user }) => {
+const Card = (props) => {
+  const { title, description } = props
+
   return (
     <CardMui className="card-container">
       <CardContent>

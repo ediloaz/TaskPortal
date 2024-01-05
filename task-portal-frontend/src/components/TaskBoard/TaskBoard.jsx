@@ -1,48 +1,14 @@
 import { useCallback, useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-import Card from "@mui/material/Card";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
-import Title from "@mui/icons-material/Title";
-import Description from "@mui/icons-material/Description";
-
-import Modal from "components/Modal/Modal";
 import { COLUMNS } from "constants/column";
-import { CARDS_STORAGE_ID } from "constants/card";
+import { changeStatusCard, insertObjectToPosition, removeObjectToPosition, moveObjectToPosition } from 'helpers/cards'
 
-import Column from "./Column/Column";
+import BoardCard from "components/TaskBoard/Card/Card";
+import AddCard from "components/TaskBoard/AddCard/AddCard";
 
 import "./TaskBoard.sass";
-
-const FormToAddNewCard = ({ addCard, onTitleChange, onDescriptionChange }) => {
-  return (
-    <Card className="new-card-container">
-      <Box>
-        <Title />
-        <TextField
-          id="input-title"
-          label="Title"
-          type="text"
-          variant="standard"
-          onChange={onTitleChange}
-        />
-      </Box>
-      <Box>
-        <Description />
-        <TextField
-          id="input-description"
-          label="Description"
-          variant="standard"
-          onChange={onDescriptionChange}
-        />
-      </Box>
-      <Button onClick={addCard}>Agregar tarea</Button>
-    </Card>
-  );
-};
+import { getItemStyle, getListStyle } from './styles'
 
 const TaskBoard = ({ cards, addNewCard }) => {
   const [open, setOpen] = useState(false);
@@ -61,29 +27,73 @@ const TaskBoard = ({ cards, addNewCard }) => {
     handleClose();
   }, [addNewCard, title, description]);
 
+  const onDragEnd = (result) => {
+    const cardId = parseInt(result?.draggableId)
+    const {source, destination} = result
+
+    if (!destination) return
+
+    // Just change the index in same column
+    if (source.droppableId === destination.droppableId) {
+      moveObjectToPosition(cards?.[source?.droppableId], cardId, parseInt(destination?.index))
+    } else {
+      changeStatusCard(cardId, destination?.droppableId)
+      insertObjectToPosition(cards?.[source?.droppableId], cards?.[destination?.droppableId], cardId, parseInt(destination?.index))
+      removeObjectToPosition(cards?.[source?.droppableId], cardId)
+    }
+  }
+
   return (
     <div className="task-board-container">
       <div className="columns-container">
-        {COLUMNS.map(({ id, name }) => (
-          <Column key={name} title={name} cards={cards?.[id]} />
+      <DragDropContext onDragEnd={onDragEnd}>
+        {COLUMNS.map((column, index) => (
+          <Droppable key={column?.id} droppableId={column?.id}>
+            {(provided, snapshot) => (
+              <div
+                className='column-container'
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver)}
+                {...provided.droppableProps}
+              >
+                  <span className='title'>{column.title}</span>
+                  {cards?.[column?.id]?.map( (card, index) => (
+                    <Draggable
+                      key={`${card?.id}`}
+                      draggableId={`${card?.id}`}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                        >
+                          <BoardCard key={card?.id} {...card} />
+                          </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+              </div>
+            )}
+        </Droppable>
         ))}
-      </div>
-      <Modal isOpen={open} onClose={handleClose}>
-        <FormToAddNewCard
-          addCard={addCard}
-          onTitleChange={onTitleChange}
-          onDescriptionChange={onDescriptionChange}
-        />
-      </Modal>
-      <Fab
-        className="button-new-card"
-        color="secondary"
-        aria-label="add-card"
-        onClick={handleOpen}
-      >
-        <AddIcon />
-      </Fab>
+      </DragDropContext>
     </div>
+    <AddCard
+      open={open}
+      addCard={addCard}
+      handleOpen={handleOpen}
+      handleClose={handleClose}
+      onTitleChange={onTitleChange}
+      onDescriptionChange={onDescriptionChange}
+    />
+  </div>
   );
 };
 export default TaskBoard;

@@ -17,8 +17,6 @@ const TaskBoard = () => {
     if (_cards.length) setCards(formatCardsByColumn(_cards))
     else if (_cards.length === 0) setCards([])
     else setError(true)
-
-    console.log(_cards)
   }
 
   useEffect(() => {

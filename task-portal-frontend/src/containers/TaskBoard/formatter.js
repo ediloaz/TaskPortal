@@ -1,12 +1,12 @@
-import { DEFAULT_COLUMN } from 'constants/column'
+import { COLUMNS } from 'constants/column'
 
 export const formatCardsByColumn = (cards) => {
-  return cards.reduce((result, card) => {
-    const columnId = card.column || DEFAULT_COLUMN
-    if (!result[columnId]) {
-      result[columnId] = []
-    }
-    result[columnId].push(card)
-    return result
-  }, {})
+  const cardsWithColumns = COLUMNS.reduce((result, column) => {
+    const columnId = column.id;
+    const columnCards = cards.filter(card => card.status === columnId);
+    result[columnId] = columnCards || [];
+    return result;
+  }, {});
+  
+  return cardsWithColumns;
 }
