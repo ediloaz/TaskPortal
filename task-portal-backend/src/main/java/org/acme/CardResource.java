@@ -32,6 +32,14 @@ public class CardResource {
     }
 
     @GET
+    @Path("/byOwnerId/{ownerId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public List<Card> getCardsByOwnerId(@PathParam("ownerId") Long ownerId) {
+        return Card.list("ownerId", ownerId);
+    }
+
+    @GET
     @Path("/titles")
     @Produces(MediaType.TEXT_PLAIN)
     public String titles() {
@@ -49,6 +57,27 @@ public class CardResource {
         card.persist();
 
         return Response.status(Response.Status.CREATED).build();
+    }
+
+    @POST
+    @Path("/updateStatus")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateStatus(@HeaderParam("X-CSRF-Token") String csrfToken, Card card) {
+        // TODO: VALIDATE TOKEN
+        Card existingCard = Card.findById(card.getId());
+
+        if (existingCard != null) {
+            existingCard.setStatus(card.getStatus());
+            existingCard.persist();
+
+            return Response.status(Response.Status.CREATED).build();
+        }else{
+            return Response.status(Response.Status.BAD_REQUEST)
+            .entity("Not found card id")
+            .build();
+        }
+
     }
     
     @DELETE
