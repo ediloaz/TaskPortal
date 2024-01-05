@@ -14,24 +14,12 @@ import './SignIn.sass'
 const SignIn = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [displayWelcome, setDisplayWelcome] = useState(false)
 
-  const { isLogged, login } = useContext(AuthContext)
-
-  console.log('isLogged', isLogged)
+  const { login } = useContext(AuthContext)
 
   const callToSignIn = () => {
     login(username, password)
   }
-
-  useEffect(() => {
-    if (isLogged) {
-      // setDisplayWelcome(true)
-      // setTimeout(() => {
-      //   setDisplayWelcome(false)
-      // }, 2000)
-    }
-  }, [isLogged])
 
   return (
     <Card className="sign-card-container">
@@ -44,7 +32,6 @@ const SignIn = () => {
         <TextField id="input-password" label="Password" variant="standard" type="password" onChange={(e) => setPassword(e.target.value)} />
       </Box>
       <Button onClick={callToSignIn}>Sign In</Button>
-      <span>{displayWelcome ? `Bienvenido ${username}` : ''}</span>
     </Card>
   );
 };

@@ -4,12 +4,13 @@ import { setCookie, getCookie } from 'helpers/cookies'
 
 const SIGN_IN_URL = "account/login"
 const SIGN_OUT_URL = "account/logout"
+const SIGN_UP_IN_URL = "account/signup"
 const CHECK_SIGN_IN_URL = "account/checkLogin"
-const COOKIE_CSRF_TOKEN = "csrf-token"
-const COOKIE_USERNAME = "user-username"
-const COOKIE_USER_ID = "user-id"
+const CSRF_TOKEN = "csrf-token"
+const USERNAME = "user-username"
+const USER_ID = "user-id"
 
-export const signIn = async (username, password) => {
+export const signIn = async ({ username, password, setUserData }) => {
   const postData = { username, password }
 
   const response = await fetch(`${BACKEND_URL}/${SIGN_IN_URL}`, {
@@ -24,10 +25,14 @@ export const signIn = async (username, password) => {
     console.log('User logged in successfully, username: ' + username)
     const user = await response.json() || {}
     
-    setCookie(COOKIE_CSRF_TOKEN, user?.csrfToken, 7)
-    setCookie(COOKIE_USERNAME, user?.username, 7)
-    sessionStorage.setItem(COOKIE_USER_ID, user?.id)
-    sessionStorage.setItem(COOKIE_USERNAME, user?.username)
+    setCookie(CSRF_TOKEN, user?.csrfToken, 7)
+    setCookie(USERNAME, user?.username, 7)
+    sessionStorage.setItem(USER_ID, user?.id)
+    sessionStorage.setItem(USERNAME, user?.username)
+
+    if (setUserData) {
+      setUserData(user)
+    }
 
     return true
   } else {
@@ -37,8 +42,7 @@ export const signIn = async (username, password) => {
   }
 }
 
-
-export const checkSignIn = async (username) => {
+export const checkSignIn = async ({ username, setUserData }) => {
   const postData = { username, csrfToken: getAuthCookie() }
 
   const response = await fetch(`${BACKEND_URL}/${CHECK_SIGN_IN_URL}`, {
@@ -52,9 +56,46 @@ export const checkSignIn = async (username) => {
   if (response.status === STATUS_CODE.OK) {
     console.log('User until is logged, username: ' + username)
 
+    if (setUserData) {
+      const user = await response.json() || {}
+      setUserData(user)
+    }
+
     return true
   } else {
     console.log('User is not logged, username: ' + username)
+
+    return false
+  }
+}
+
+export const signUp = async ({ username, password, age, phone, gender, setUserData }) => {
+  const postData = { username, password, age, phone, gender }
+
+  const response = await fetch(`${BACKEND_URL}/${SIGN_UP_IN_URL}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', 
+    },
+    body: JSON.stringify(postData),
+  });
+
+  if (response.status === STATUS_CODE.CREATED) {
+    console.log('User logged in successfully, username: ' + username)
+    const user = await response.json() || {}
+
+    setCookie(CSRF_TOKEN, user?.csrfToken, 7)
+    setCookie(USERNAME, user?.username, 7)
+    sessionStorage.setItem(USER_ID, user?.id)
+    sessionStorage.setItem(USERNAME, user?.username)
+    
+    if (setUserData) {
+      setUserData(user)
+    }
+
+    return true
+  } else {
+    console.log('User incorrect, username: ' + username)
 
     return false
   }
@@ -72,16 +113,16 @@ export const signOut = async () => {
     body: JSON.stringify(postData),
   });
 
-  setCookie(COOKIE_CSRF_TOKEN, null, 7)
-  setCookie(COOKIE_USERNAME, null, 7)
-  sessionStorage.setItem(COOKIE_USER_ID, null)
-  sessionStorage.setItem(COOKIE_USERNAME, null)
+  setCookie(CSRF_TOKEN, null, 7)
+  setCookie(USERNAME, null, 7)
+  sessionStorage.setItem(USER_ID, null)
+  sessionStorage.setItem(USERNAME, null)
 }
 
-export const getAuthCookie = () => getCookie(COOKIE_CSRF_TOKEN)
+export const getAuthCookie = () => getCookie(CSRF_TOKEN)
 
-export const getUserIdCookie = () => getCookie(COOKIE_USER_ID)
+export const getUserIdCookie = () => getCookie(USER_ID)
 
-export const getUsernameCookie = () => getCookie(COOKIE_USERNAME)
+export const getUsernameCookie = () => getCookie(USERNAME)
 
 export const getAuthHeader = () => ({ 'X-CSRF-Token': getAuthCookie()})

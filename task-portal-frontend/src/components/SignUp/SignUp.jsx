@@ -1,4 +1,6 @@
-import { useState } from "react"
+import { useState, useContext } from 'react'
+
+import { AuthContext } from 'context/authContext';
 
 import Box from "@mui/material/Box"
 import Card from "@mui/material/Card"
@@ -20,8 +22,13 @@ import Select from '@mui/material/Select';
 import './SignUp.sass'
 
 const SignUp = () => {
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [age, setAge] = useState("")
+  const [phone, setPhone] = useState("")
+  const [gender, setGender] = useState("")
+
+  const { register } = useContext(AuthContext)
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -31,15 +38,19 @@ const SignUp = () => {
     setGender(event.target.value);
   };
 
+  const callToSignUp = () => {
+    register({ username, password, age, phone, gender })
+  }
+
   return (
     <Card className="sign-card-container">
       <Box>
         <Person />
-        <TextField id="input-username" label="Username" type="text" variant="standard" />
+        <TextField id="input-username" label="Username" type="text" variant="standard" onChange={(e) => setUsername(e.target.value)} />
       </Box>
       <Box>
         <Tty />
-        <TextField id="input-username" label="Telephone number" type="text" variant="standard" />
+        <TextField id="input-username" label="Telephone number" type="text" variant="standard" onChange={(e) => setPhone(e.target.value)} />
       </Box>
       <Box>
         <CalendarToday />
@@ -82,10 +93,10 @@ const SignUp = () => {
       </Box>
       <Box>
         <Lock />
-        <TextField id="input-password" label="Password" variant="standard" type="password" />
+        <TextField id="input-password" label="Password" variant="standard" type="password" onChange={(e) => setPassword(e.target.value)} />
       </Box>
       <span className="password-hint">Your password must contain letters, numbers, uppercase characters, and no special characters. It should have a minimum length of 8 and a maximum length of 12.</span>
-      <Button>Sign Up</Button>
+      <Button onClick={callToSignUp}>Sign Up</Button>
     </Card>
   )
 }

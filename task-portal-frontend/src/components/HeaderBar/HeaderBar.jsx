@@ -15,13 +15,19 @@ import Typography from '@mui/material/Typography';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 
 import Authentication from 'containers/Authentication/Authentication'
+import AccountInfo from 'containers/AccountInfo/AccountInfo'
 
 const HeaderBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [open, setOpen] = useState(false);
+  const [openAccountInfo, setOpenAccountInfo] = useState(false);
+  
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  
+  const handleOpenAccountInfo = () => setOpenAccountInfo(true)
+  const handleCloseAccountInfo = () => setOpenAccountInfo(false)
 
   const { isLogged, username, logout: _logout } = useContext(AuthContext)
 
@@ -48,6 +54,7 @@ const HeaderBar = () => {
   return (
     <AppBar position="static">
       <Authentication isOpen={open} onClose={handleClose} />
+      <AccountInfo isOpen={openAccountInfo} onClose={handleCloseAccountInfo} />
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <LocationCityIcon sx={{ mr: 1 }} />
@@ -72,7 +79,7 @@ const HeaderBar = () => {
           <Typography
             variant="h6"
             noWrap
-            onClick={handleOpen}
+            onClick={isLogged ? handleOpenAccountInfo : handleOpen}
             component="a"
             sx={{
               mr: 2,
@@ -107,6 +114,9 @@ const HeaderBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <MenuItem onClick={handleOpenAccountInfo}>
+                <Typography textAlign="center">View my info</Typography>
+              </MenuItem>
               <MenuItem onClick={logout}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>
