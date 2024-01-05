@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
@@ -54,29 +54,18 @@ const TaskBoard = ({ cards, addNewCard }) => {
   const onTitleChange = (event) => setTitle(event?.target?.value);
   const onDescriptionChange = (event) => setDescription(event?.target?.value);
 
-  const addCard = () => {
-    const retrievedObject = localStorage.getItem(CARDS_STORAGE_ID);
-    const parsedCards = JSON.parse(retrievedObject);
-
-    parsedCards.push({
-      title,
-      description,
-    });
-
-    const serializedObject = JSON.stringify(parsedCards);
-    localStorage.setItem(CARDS_STORAGE_ID, serializedObject);
-
+  const addCard = useCallback(() => {
+    addNewCard(title, description);
     setTitle("");
     setDescription("");
-    addNewCard();
     handleClose();
-  };
+  }, [addNewCard, title, description]);
 
   return (
     <div className="task-board-container">
       <div className="columns-container">
         {COLUMNS.map(({ id, name }) => (
-          <Column title={name} cards={cards?.[id]} />
+          <Column key={name} title={name} cards={cards?.[id]} />
         ))}
       </div>
       <Modal isOpen={open} onClose={handleClose}>

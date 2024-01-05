@@ -1,80 +1,34 @@
 import { useState, useEffect } from 'react'
 
-import { DEFAULT_COLUMN } from 'constants/column'
-import { CARDS_MOCKUP, CARDS_STORAGE_ID } from 'constants/card'
-import { BACKEND_URL } from 'constants/url'
+import { getCards, addCard } from 'helpers/cards'
+
 import TaskBoardComponent from 'components/TaskBoard/TaskBoard'
 
-const CARDS_URL = 'card'
-
-const formatCardsByColumn = (cards) => {
-  return cards.reduce((result, card) => {
-    const columnId = card.column || DEFAULT_COLUMN;
-    if (!result[columnId]) {
-      result[columnId] = [];
-    }
-    result[columnId].push(card);
-    return result;
-  }, {});
-};
-
-const retrievedObject = localStorage.getItem(CARDS_STORAGE_ID);
-const parsedCards = JSON.parse(retrievedObject);
-
-if (!parsedCards) {
-  const serializedObject = JSON.stringify(CARDS_MOCKUP);
-  localStorage.setItem(CARDS_STORAGE_ID, serializedObject);
-}
+import { formatCardsByColumn } from './formatter'
 
 const TaskBoard = () => {
   const [cards, setCards] = useState([])
+  const [error, setError] = useState(false)
+  // const [loading, setLoading] = useState(true)
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`${BACKEND_URL}/${CARDS_URL}`);
-      
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+  const updateCards = async () => {
+    const _cards = await getCards()
 
-      const result = await response.json();
+    if (_cards.length) setCards(formatCardsByColumn(_cards))
+    else if (_cards.length === 0) setCards([])
+    else setError(true)
 
-      const formattedCards = formatCardsByColumn(result)
-
-      setCards(formattedCards);
-    } catch (error) {
-        const retrievedObject = localStorage.getItem(CARDS_STORAGE_ID);
-        const parsedCards = JSON.parse(retrievedObject);
-        const formattedCards = formatCardsByColumn(parsedCards)
-
-        setCards(formattedCards);
-        
-      console.error('Error fetching data:', error.message);
-    }
-  };
+    console.log(_cards)
+  }
 
   useEffect(() => {
-    fetchData();
+    updateCards()
   }, [])
 
-  const addNewCard = async () => {
-    const postData = {
-      title: 'New Card',
-      description: 'New Edi card'
-    }
+  const addNewCard = async (title, description) => {
+    const answer = addCard(title, description)
 
-    const response = await fetch(`${BACKEND_URL}/${CARDS_URL}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', 
-      },
-      body: JSON.stringify(postData),
-    });
-
-    // eslint-disable-next-line no-console
-    console.log('	🎮 response add', response)
-    
-    fetchData()
+    if (answer) updateCards()
   }
   
   return (

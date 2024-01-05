@@ -1,20 +1,20 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
-import AppBar from '@mui/material/AppBar';
+import { AuthContext } from 'context/authContext'
+
 import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
+import Avatar from '@mui/material/Avatar';
+import AppBar from '@mui/material/AppBar';
+import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
+import MenuItem from '@mui/material/MenuItem';
+import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 
 import Authentication from 'containers/Authentication/Authentication'
-
-const settings = ['Logout'];
 
 const HeaderBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -22,6 +22,13 @@ const HeaderBar = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const { isLogged, username, logout: _logout } = useContext(AuthContext)
+
+  const logout = () => {
+    _logout()
+    handleCloseUserMenu()
+  }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -75,13 +82,15 @@ const HeaderBar = () => {
               cursor: 'pointer'
             }}
           >
-            Sign in
+            {isLogged ? username : 'Sign in'}
           </Typography>
+          {isLogged &&
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={username} />
               </IconButton>
             </Tooltip>
+          }
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
@@ -98,11 +107,9 @@ const HeaderBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={logout}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
