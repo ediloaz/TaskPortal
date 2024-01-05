@@ -1,5 +1,6 @@
 package org.acme;
 
+import org.acme.util.CsrfUtil;
 import org.jboss.logging.Logger;
 
 import java.util.Set;
@@ -13,6 +14,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.PathParam;
 import java.util.LinkedHashMap;
+import jakarta.ws.rs.HeaderParam;
 import java.util.stream.Collectors;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.MediaType;
@@ -42,8 +44,8 @@ public class CardResource {
     @POST
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addCard(Card card) {
-        System.out.println("Received card: " + card);
+    public Response addCard(@HeaderParam("X-CSRF-Token") String csrfToken, Card card) {
+        // TODO: VALIDATE TOKEN
         card.persist();
 
         return Response.status(Response.Status.CREATED).build();

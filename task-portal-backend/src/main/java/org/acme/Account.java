@@ -15,8 +15,8 @@ public class Account extends PanacheEntity {
     @Column(name = "password")
     public String password;
 
-    // @OneToMany(mappedBy = "Account", cascade = CascadeType.ALL, orphanRemoval = true)
-    // public List<Card> cards;
+    @Column(name = "csrf_token")
+    public String csrfToken;
 
     // @Column(name = "age")
     // public String age;
@@ -29,8 +29,25 @@ public class Account extends PanacheEntity {
 
     public Account() {}
 
-    public Account(String username, String password) {
+    public Account(String username, String password, String csrfToken) {
         this.username = username;
         this.password = password;
+        this.csrfToken = csrfToken;
+    }
+    
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getCsrfToken() {
+        return this.csrfToken;
+    }
+
+    public void setCsrfToken(String csrfToken) {
+        this.csrfToken = csrfToken;
     }
 }

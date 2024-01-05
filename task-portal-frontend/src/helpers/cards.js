@@ -26,8 +26,8 @@ export const getCards = async (username, password) => {
 }
 
 export const addCard = async (title, description) => {
-  const owner_id = parseInt(sessionStorage.getItem('user_id')) || 0
-  const postData = { title, description, status: 'todo', owner_id }
+  const ownerId = parseInt(sessionStorage.getItem('user_id')) || 0
+  const postData = { title, description, status: 'todo', ownerId }
   
   try{
     console.log(1)
