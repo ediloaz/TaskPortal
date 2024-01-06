@@ -1,7 +1,6 @@
 package org.acme;
 
 import org.acme.util.CsrfUtil;
-import org.jboss.logging.Logger;
 
 import java.util.Set;
 import java.util.List;
@@ -77,7 +76,26 @@ public class CardResource {
             .entity("Not found card id")
             .build();
         }
+    }
 
+    @POST
+    @Path("/updateImage")
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateImage(@HeaderParam("X-CSRF-Token") String csrfToken, Card card) {
+        // TODO: VALIDATE TOKEN
+        Card existingCard = Card.findById(card.getId());
+
+        if (existingCard != null) {
+            existingCard.setImage(card.getImage());
+            existingCard.persist();
+
+            return Response.status(Response.Status.CREATED).build();
+        }else{
+            return Response.status(Response.Status.BAD_REQUEST)
+            .entity("Not found card id")
+            .build();
+        }
     }
     
     @DELETE
