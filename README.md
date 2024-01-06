@@ -4,7 +4,10 @@
 
 Click  ➡️ [ en Github Pages se ve el Frontend](https://ediloaz.github.io/TaskPortal/task-portal-frontend/build/)
 
-## Advertencias Importantes ⚠️
+![screenshot of web app](https://i.ibb.co/0nCR33S/App-Screenshot.png)
+
+
+## Mensajes Importantes 👇🏽
 
 Antes de sumergirte en este código, es crucial tener en cuenta algunas consideraciones:
 
