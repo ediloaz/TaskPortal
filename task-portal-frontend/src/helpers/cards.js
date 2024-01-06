@@ -65,6 +65,25 @@ export const changeStatusCard = async (id, status) => {
   }
 }
 
+export const updateImageCard = async (id, base64) => {
+  const postData = { id, image: base64 };
+  
+  try{
+    const response = await fetch(`${BACKEND_URL}/${CARDS_URL}/updateImage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
+      body: JSON.stringify(postData),
+    })
+
+    return response.status === STATUS_CODE.OK
+  }catch(e){
+    console.log(e.message)
+  }
+}
+
 export const insertObjectToPosition = (oldArray, newArray, objectId, newPosition) => {
   console.log(oldArray, newArray, objectId, newPosition)
   const objectToMove = oldArray.find(obj => obj.id === objectId);
