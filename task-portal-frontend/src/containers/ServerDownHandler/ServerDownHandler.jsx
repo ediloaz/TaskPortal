@@ -13,7 +13,7 @@ const ServerDownHandler = ({ useOfflineMode }) => {
       className="offline-modal-container"
     >
       <Box sx={{ width: "100%" }}>
-        <h2>No Server Connection</h2>
+        <h2>Go to Offline Mode!</h2>
         <p>The connection to the Quarkus server could not be established.</p>
         <p><b>Do you want to use the interface in offline mode?</b></p>
       </Box>
