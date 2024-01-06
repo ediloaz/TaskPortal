@@ -24,7 +24,7 @@ const TaskBoard = () => {
   }, [])
 
   const addNewCard = async (title, description) => {
-    const answer = addCard(title, description)
+    const answer = await addCard(title, description)
 
     if (answer) updateCards()
   }

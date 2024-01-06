@@ -42,7 +42,7 @@ export const addCard = async (title, description) => {
       body: JSON.stringify(postData),
     })
 
-    return response.status === STATUS_CODE.OK
+    return response.status === STATUS_CODE.CREATED
   }catch(e){
     console.log(e.message)
   }
