@@ -6,7 +6,7 @@ export const getItemStyle = (isDragging, draggableStyle) => ({
   padding: GRID * 2,
 
   // change background colour if dragging
-  background: isDragging ? "lightgreen" : "white",
+  background: isDragging ? "lightgreen" : "inherit",
 
   ...draggableStyle
 });

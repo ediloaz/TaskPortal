@@ -20,10 +20,19 @@
       background-color: #AAC
 
       .title
-        display: block
+        display: grid
         font-size: 20px
-        margin: 20px 10px
+        padding: 20px 10px
         font-weight: bolder
+        grid-auto-flow: column
+
+        span
+          text-align: left
+          align-self: center
+
+        .avatar
+          margin-left: auto
+
   
   .button-new-card
     position: fixed

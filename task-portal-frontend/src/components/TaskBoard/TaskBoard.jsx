@@ -4,6 +4,8 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { COLUMNS } from "constants/column";
 import { changeStatusCard, insertObjectToPosition, removeObjectToPosition, moveObjectToPosition } from 'helpers/cards'
 
+import Avatar from '@mui/material/Avatar';
+
 import BoardCard from "components/TaskBoard/Card/Card";
 import AddCard from "components/TaskBoard/AddCard/AddCard";
 
@@ -56,7 +58,10 @@ const TaskBoard = ({ cards, addNewCard }) => {
                 style={getListStyle(snapshot.isDraggingOver)}
                 {...provided.droppableProps}
               >
-                  <span className='title'>{column.title}</span>
+                  <div className='title' style={{ backgroundColor: column?.color}}>
+                    <span>{column.title}</span>
+                    <Avatar className="avatar" sx={{ color: 'black', bgcolor: "white" }}>{cards?.[column?.id]?.length || 0}</Avatar>
+                  </div>
                   {cards?.[column?.id]?.map( (card, index) => (
                     <Draggable
                       key={`${card?.id}`}
