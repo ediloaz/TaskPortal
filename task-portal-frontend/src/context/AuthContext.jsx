@@ -8,6 +8,8 @@ const AuthContext = ({ children }) => {
   const [isLogged, setIsLogged] = useState(true)
   const [username, setUsername] = useState('')
   const [userData, setUserData] = useState({})
+  const [offlineMode, setOfflineMode] = useState(false)
+  const [serverConnection, setServerConnection] = useState(true)
   
   useEffect(() => {
     checkLogin()
@@ -24,14 +26,20 @@ const AuthContext = ({ children }) => {
 
   const checkLogin = async () => {
     const _username = getUsernameCookie()
-    const isSigned = await checkSignIn({ username: _username, setUserData })
+    try {
+      const isSigned = await checkSignIn({ username: _username, setUserData })
 
-    if (isSigned) {
-      setUsername(_username)
-      setIsLogged(true)
-    }else{
-      setIsLogged(false)
+      if (isSigned) {
+        setUsername(_username)
+        setIsLogged(true)
+      }else{
+        setIsLogged(false)
+      }
+    }catch (e) {
+      console.log('Error to connect to server', e)
+      setServerConnection(false)
     }
+
   }
 
   const register = async ({ username: _username, password, age, phone, gender }) => {
@@ -49,8 +57,20 @@ const AuthContext = ({ children }) => {
     setIsLogged(false)
   }
 
+  const useOfflineMode = () => {
+    setUsername('Offline User')
+    setUserData({
+      username: 'Offline User',
+      age: '50 - *',
+      phone: '8888-8888',
+      gender: 'Prefer not to say',
+    })
+    setIsLogged(true)
+    setOfflineMode(true)
+  }
+
   return (
-    <authContext.Provider value={{ userData, isLogged, username, login, register, logout }}> 
+    <authContext.Provider value={{ userData, isLogged, username, login, register, logout, serverConnection, useOfflineMode, offlineMode }}> 
       { children }
     </authContext.Provider>
 

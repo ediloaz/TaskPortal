@@ -18,8 +18,6 @@ export const getCards = async (username, password) => {
       return cards
     } else {
       console.error('Network response was not ok')
-
-      return false
     }
   } catch (error) {
     console.error('Error fetching data:', error.message)
