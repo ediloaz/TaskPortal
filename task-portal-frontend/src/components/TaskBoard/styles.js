@@ -1,15 +1,13 @@
-const GRID = 8;
+const GRID = 0;
 
 export const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
   padding: GRID * 2,
-  margin: `0 0 ${GRID}px 0`,
 
   // change background colour if dragging
-  background: isDragging ? "lightgreen" : "grey",
+  background: isDragging ? "lightgreen" : "white",
 
-  // styles we need to apply on draggables
   ...draggableStyle
 });
 export const getListStyle = isDraggingOver => ({

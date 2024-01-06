@@ -19,7 +19,7 @@ const Authentication = ({ isOpen, onClose }) => {
       className="authentication-modal-container"
     >
       <Box sx={{ width: "100%" }}>
-        <h2>AccountInfo</h2>
+        <h2>Account Info</h2>
         <p><b>Username:</b> {userData?.username}</p>
         <p><b>Age:</b> {userData?.age}</p>
         <p><b>Gender:</b> {userData?.gender}</p>
