@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 
 import { AuthContext } from 'context/authContext';
 
@@ -17,9 +17,24 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-
-
 import './SignUp.sass'
+
+const applyPhoneMask = (value) => {
+   const numericValue = value.replace(/\D/g, '');
+   const limitedValue = numericValue.slice(0, 8);
+   const maskedValue = limitedValue.replace(/(\d{4})(\d{0,4})/, '$1-$2');
+   
+   return maskedValue;
+}
+
+const isPasswordValid = (password) => {
+  const containsLettersNumbers = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password);
+  const noSpecialCharacters = /^[a-zA-Z0-9]+$/.test(password);
+  const isLengthValid = password.length >= 8 && password.length <= 12;
+
+  return containsLettersNumbers && noSpecialCharacters && isLengthValid;
+}
+
 
 const SignUp = () => {
   const [username, setUsername] = useState("")
@@ -27,6 +42,8 @@ const SignUp = () => {
   const [age, setAge] = useState("")
   const [phone, setPhone] = useState("")
   const [gender, setGender] = useState("")
+  const [validPassword, setValidPassword] = useState(true)
+  const [enableSignUp, setEnableSignUp] = useState(false)
 
   const { register } = useContext(AuthContext)
 
@@ -37,20 +54,46 @@ const SignUp = () => {
   const handleChangeGender = (event) => {
     setGender(event.target.value);
   };
+  
+  const handleChangePhone = (e) => {
+    const newValue = applyPhoneMask(e.target.value);
+    setPhone(newValue);
+  };
+
+  const handleChangePassword = (e) => {
+    const isValid = isPasswordValid(e.target.value)
+
+    setPassword(e.target.value)
+    setValidPassword(isValid)
+  }
 
   const callToSignUp = () => {
-    register({ username, password, age, phone, gender })
+    if (username && validPassword && phone && gender) {
+      register({ username, password, age, phone, gender })
+    }
+    else {
+      alert('Please fill all required fields')
+      console.error('Please fill all required fields')
+    }
   }
+
+  useEffect(() => {
+    if (username && validPassword && phone && gender) {
+      setEnableSignUp(true)
+    } else {
+      setEnableSignUp(false)
+    }
+  }, [username, validPassword, phone, gender])
 
   return (
     <Card className="sign-card-container">
       <Box>
         <Person />
-        <TextField id="input-username" label="Username" type="text" variant="standard" onChange={(e) => setUsername(e.target.value)} />
+        <TextField id="input-username" label="Username *" type="text" variant="standard" onChange={(e) => setUsername(e.target.value)} />
       </Box>
       <Box>
         <Tty />
-        <TextField id="input-username" label="Telephone number" type="text" variant="standard" onChange={(e) => setPhone(e.target.value)} />
+        <TextField placeholder='8888-8888' id="input-telephone" label="Telephone number *" type="text" variant="standard" value={phone} onChange={handleChangePhone} />
       </Box>
       <Box>
         <CalendarToday />
@@ -77,7 +120,7 @@ const SignUp = () => {
       <Box>
         <Wc />
         <FormControl variant="standard">
-          <InputLabel id="sign-up-gender-label">Gender</InputLabel>
+          <InputLabel id="sign-up-gender-label">Gender *</InputLabel>
           <Select
             labelId="sign-up-gender-label"
             id="sign-up-gender"
@@ -91,12 +134,14 @@ const SignUp = () => {
           </Select>
         </FormControl>
       </Box>
-      <Box>
-        <Lock />
-        <TextField id="input-password" label="Password" variant="standard" type="password" onChange={(e) => setPassword(e.target.value)} />
+      <Box className="password-box">
+        <Lock style={{color: validPassword ? 'green' : 'inherit' }} />
+        <TextField className="password-field" error={!validPassword} id="input-password" label="Password *" variant="standard" type="password" onChange={handleChangePassword} />
       </Box>
-      <span className="password-hint">Your password must contain letters, numbers, uppercase characters, and no special characters. It should have a minimum length of 8 and a maximum length of 12.</span>
-      <Button onClick={callToSignUp}>Sign Up</Button>
+      <p className="password-hint" style={{color: validPassword ? 'inherit' : 'red' }}>Your password must contain letters, numbers, uppercase characters, and no special characters. It should have a minimum length of 8 and a maximum length of 12.</p>
+
+      <p className="hint">* Obligatory fields</p>
+      <Button disabled={!enableSignUp} onClick={callToSignUp}>Sign Up</Button>
     </Card>
   )
 }
