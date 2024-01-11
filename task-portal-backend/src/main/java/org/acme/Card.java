@@ -21,7 +21,7 @@ public class Card extends PanacheEntity {
 
     @Column(name = "image")
     @Lob
-    public String image;
+    private String image;
 
     @Column(name = "owner_id")
     public Long ownerId;
@@ -55,5 +55,9 @@ public class Card extends PanacheEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Long getOwnerId() {
+        return this.ownerId;
     }
 }

@@ -52,7 +52,12 @@ public class CardResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCard(@HeaderParam("X-CSRF-Token") String csrfToken, Card card) {
-        // TODO: VALIDATE TOKEN
+        if (CsrfUtil.validateCsrfToken(card.getOwnerId(), csrfToken) == false) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                .entity("UNAUTHORIZED, Invalid CSRF token provided by the client.")
+                .build();
+        }
+
         card.persist();
 
         return Response.status(Response.Status.CREATED).build();
@@ -63,7 +68,12 @@ public class CardResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateStatus(@HeaderParam("X-CSRF-Token") String csrfToken, Card card) {
-        // TODO: VALIDATE TOKEN
+        if (CsrfUtil.validateCsrfToken(card.getOwnerId(), csrfToken) == false) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                .entity("UNAUTHORIZED, Invalid CSRF token provided by the client.")
+                .build();
+        }
+
         Card existingCard = Card.findById(card.getId());
 
         if (existingCard != null) {
@@ -83,7 +93,12 @@ public class CardResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateImage(@HeaderParam("X-CSRF-Token") String csrfToken, Card card) {
-        // TODO: VALIDATE TOKEN
+        if (CsrfUtil.validateCsrfToken(card.getOwnerId(), csrfToken) == false) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                .entity("UNAUTHORIZED, Invalid CSRF token provided by the client.")
+                .build();
+        }
+
         Card existingCard = Card.findById(card.getId());
 
         if (existingCard != null) {

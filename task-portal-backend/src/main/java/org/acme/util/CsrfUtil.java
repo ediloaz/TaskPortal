@@ -15,7 +15,7 @@ public class CsrfUtil {
     }
   }
 
-  public static Boolean validateCsrfToken(Integer userId, String csrfToken) {
+  public static Boolean validateCsrfToken(Long userId, String csrfToken) {
     Optional<Account> optionalAccount = Account.find("id = ?1 and csrfToken = ?2", userId, csrfToken).firstResultOptional();
     if (optionalAccount.isPresent()) {
         return true;
