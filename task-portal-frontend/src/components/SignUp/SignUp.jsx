@@ -86,7 +86,7 @@ const SignUp = () => {
   }, [username, validPassword, phone, gender])
 
   return (
-    <Card className="sign-card-container">
+    <Card elevation={0} className="sign-card-container">
       <Box>
         <Person />
         <TextField id="input-username" label="Username *" type="text" variant="standard" onChange={(e) => setUsername(e.target.value)} />
