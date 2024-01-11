@@ -36,7 +36,7 @@ export const signIn = async ({ username, password, setUserData }) => {
 
     return true
   } else {
-    console.log('User incorrect, username: ' + username)
+    console.log('Incorrect data to login , username: ' + username)
 
     return false
   }

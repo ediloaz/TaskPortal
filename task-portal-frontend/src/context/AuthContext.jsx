@@ -21,7 +21,11 @@ const AuthContext = ({ children }) => {
     if (isSigned) {
       setUsername(_username)
       setIsLogged(true)
+
+      return true
     }
+
+    return false
   }
 
   const checkLogin = async () => {
