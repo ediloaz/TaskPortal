@@ -40,6 +40,8 @@ export const addCard = async (title, description) => {
       body: JSON.stringify(postData),
     })
 
+    if (response.status !== STATUS_CODE.CREATED) console.error('Error creating new card: '+ response.statusText);
+
     return response.status === STATUS_CODE.CREATED
   }catch(e){
     console.log(e.message)
@@ -47,7 +49,8 @@ export const addCard = async (title, description) => {
 }
 
 export const changeStatusCard = async (id, status) => {
-  const postData = { id, status }
+  const ownerId = parseInt(sessionStorage.getItem('user-id')) || 0
+  const postData = { id, status, ownerId }
   
   try{
     const response = await fetch(`${BACKEND_URL}/${UPDATE_STATUS_URL}`, {
@@ -66,7 +69,8 @@ export const changeStatusCard = async (id, status) => {
 }
 
 export const updateImageCard = async (id, base64) => {
-  const postData = { id, image: base64 };
+  const ownerId = parseInt(sessionStorage.getItem('user-id')) || 0
+  const postData = { id, ownerId, image: base64 };
   
   try{
     const response = await fetch(`${BACKEND_URL}/${CARDS_URL}/updateImage`, {

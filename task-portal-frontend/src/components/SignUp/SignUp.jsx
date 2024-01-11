@@ -89,15 +89,15 @@ const SignUp = () => {
     <Card elevation={0} className="sign-card-container">
       <Box>
         <Person />
-        <TextField id="input-username" label="Username *" type="text" variant="standard" onChange={(e) => setUsername(e.target.value)} />
+        <TextField id="input-username" label="Username *" type="text" variant="filled" onChange={(e) => setUsername(e.target.value)} />
       </Box>
       <Box>
         <Tty />
-        <TextField placeholder='8888-8888' id="input-telephone" label="Telephone number *" type="text" variant="standard" value={phone} onChange={handleChangePhone} />
+        <TextField placeholder='8888-8888' id="input-telephone" label="Telephone number *" type="text" variant="filled" value={phone} onChange={handleChangePhone} />
       </Box>
       <Box>
         <CalendarToday />
-        <FormControl variant="standard">
+        <FormControl variant="filled">
           <InputLabel id="sign-up-age-label">Age</InputLabel>
           <Select
             labelId="sign-up-age-label"
@@ -119,7 +119,7 @@ const SignUp = () => {
       </Box>
       <Box>
         <Wc />
-        <FormControl variant="standard">
+        <FormControl variant="filled">
           <InputLabel id="sign-up-gender-label">Gender *</InputLabel>
           <Select
             labelId="sign-up-gender-label"
@@ -136,7 +136,7 @@ const SignUp = () => {
       </Box>
       <Box className="password-box">
         <Lock style={{color: validPassword ? 'green' : 'inherit' }} />
-        <TextField className="password-field" error={!validPassword} id="input-password" label="Password *" variant="standard" type="password" onChange={handleChangePassword} />
+        <TextField className="password-field" error={!validPassword} id="input-password" label="Password *" variant="filled" type="password" onChange={handleChangePassword} />
       </Box>
       <p className="password-hint" style={{color: validPassword ? 'inherit' : 'red' }}>Your password must contain letters, numbers, uppercase characters, and no special characters. It should have a minimum length of 8 and a maximum length of 12.</p>
 

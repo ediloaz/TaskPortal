@@ -11,14 +11,14 @@ import Modal from "components/Modal/Modal";
 
 const AddCardForm = ({ addCard, onTitleChange, onDescriptionChange }) => {
   return (
-    <Card className="new-card-container">
+    <Card elevation={0} className="new-card-container">
       <Box>
         <Title />
         <TextField
           id="input-title"
           label="Title"
           type="text"
-          variant="standard"
+          variant="filled"
           size="medium"
           onChange={onTitleChange}
         />
@@ -28,8 +28,10 @@ const AddCardForm = ({ addCard, onTitleChange, onDescriptionChange }) => {
         <TextField
           id="input-description"
           label="Description"
-          variant="standard"
+          variant="filled"
           size="medium"
+          multiline
+          rows={4}
           onChange={onDescriptionChange}
         />
       </Box>

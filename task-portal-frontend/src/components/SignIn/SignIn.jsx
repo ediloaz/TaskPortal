@@ -25,11 +25,11 @@ const SignIn = () => {
     <Card elevation={0} className="sign-card-container">
       <Box>
         <Person />
-        <TextField id="input-username" label="Username" type="text" variant="standard" onChange={(e) => setUsername(e.target.value)} />
+        <TextField id="input-username" label="Username" type="text" variant="filled" onChange={(e) => setUsername(e.target.value)} />
       </Box>
       <Box>
         <Lock />
-        <TextField id="input-password" label="Password" variant="standard" type="password" onChange={(e) => setPassword(e.target.value)} />
+        <TextField id="input-password" label="Password" variant="filled" type="password" onChange={(e) => setPassword(e.target.value)} />
       </Box>
       <Button onClick={callToSignIn}>Sign In</Button>
     </Card>

@@ -37,7 +37,7 @@ const Card = (props) => {
     }
   }
 
-  const uploadImage = (event, id) => {
+  const uploadImage = (event) => {
     try {
       var file = event.target.files[0];
       const reader = new FileReader();

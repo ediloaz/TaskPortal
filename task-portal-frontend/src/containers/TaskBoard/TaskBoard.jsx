@@ -44,6 +44,7 @@ const TaskBoard = () => {
       const answer = await addCard(title, description)
   
       if (answer) updateCards()
+      else alert("Couldn't add card, check your console for more information.")
     }
   }
 
@@ -70,8 +71,6 @@ const TaskBoard = () => {
     }
   }
 
-  console.log(cards)
-  
   return (
     <TaskBoardComponent cards={cards} addNewCard={addNewCard} updateImageCard={_updateImageCard} />
   )
