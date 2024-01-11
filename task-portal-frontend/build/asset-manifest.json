@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/TaskPortal/task-portal-frontend/build/static/css/main.1e2cf7c8.css",
-    "main.js": "/TaskPortal/task-portal-frontend/build/static/js/main.e67a2a23.js",
+    "main.css": "/TaskPortal/task-portal-frontend/build/static/css/main.a857a17c.css",
+    "main.js": "/TaskPortal/task-portal-frontend/build/static/js/main.969254b4.js",
     "static/js/787.bd5a7b48.chunk.js": "/TaskPortal/task-portal-frontend/build/static/js/787.bd5a7b48.chunk.js",
     "index.html": "/TaskPortal/task-portal-frontend/build/index.html",
-    "main.1e2cf7c8.css.map": "/TaskPortal/task-portal-frontend/build/static/css/main.1e2cf7c8.css.map",
-    "main.e67a2a23.js.map": "/TaskPortal/task-portal-frontend/build/static/js/main.e67a2a23.js.map",
+    "main.a857a17c.css.map": "/TaskPortal/task-portal-frontend/build/static/css/main.a857a17c.css.map",
+    "main.969254b4.js.map": "/TaskPortal/task-portal-frontend/build/static/js/main.969254b4.js.map",
     "787.bd5a7b48.chunk.js.map": "/TaskPortal/task-portal-frontend/build/static/js/787.bd5a7b48.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1e2cf7c8.css",
-    "static/js/main.e67a2a23.js"
+    "static/css/main.a857a17c.css",
+    "static/js/main.969254b4.js"
   ]
 }
