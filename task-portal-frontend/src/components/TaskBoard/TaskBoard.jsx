@@ -12,7 +12,7 @@ import AddCard from "components/TaskBoard/AddCard/AddCard";
 import "./TaskBoard.sass";
 import { getItemStyle, getListStyle } from './styles'
 
-const TaskBoard = ({ cards, addNewCard }) => {
+const TaskBoard = ({ cards, addNewCard, updateImageCard }) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -78,7 +78,7 @@ const TaskBoard = ({ cards, addNewCard }) => {
                             provided.draggableProps.style
                           )}
                         >
-                          <BoardCard key={card?.id} {...card} />
+                          <BoardCard key={card?.id} updateImageCard={updateImageCard} {...card} />
                           </div>
                       )}
                     </Draggable>

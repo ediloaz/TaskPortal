@@ -2,7 +2,6 @@ import { useState } from 'react'
 import "react-advanced-cropper/dist/style.css";
 
 import { FixedCropper, ImageRestriction } from 'react-advanced-cropper';
-import { updateImageCard } from 'helpers/cards'
 
 import CardMui from '@mui/material/Card';
 import Button from '@mui/material/Button';
@@ -14,8 +13,11 @@ import Modal from 'components/Modal/Modal'
 
 import './Card.sass'
 
+const MOCKUP_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAAXNSR0IArs4c6QAAAFBJREFUGFdjfJ46+z8DDsD4PAWv5CzcOp8lTUeSZGRgZATZwQhBj+MmwyUZmUCSTAyMjBBFjA9jJiJ0MjIyMIEloPh+dP9/Bqg0SBBsKFQSAAunFSOipkHdAAAAAElFTkSuQmCC"
+
 const Card = (props) => {
-  const { id, title, description } = props
+  const { id, title, description, updateImageCard } = props
+
   const [open, setOpen] = useState(false)
   const [image, setImage] = useState(props?.image)
   const [cropped, setCropped] = useState(props?.image)
@@ -30,31 +32,41 @@ const Card = (props) => {
 
   const onMoveEnd = (event) => {
     const newImage = event.getCanvas()?.toDataURL()
-    if (newImage) setCropped(newImage)
+    if (newImage) {
+      setCropped(newImage)
+    }
   }
 
   const uploadImage = (event, id) => {
-    console.log(event);
-    var file = event.target.files[0];
-    console.log(file);
-    const reader = new FileReader();
-    reader.readAsDataURL(file)
+    try {
+      var file = event.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file)
+  
+      reader.onloadend = function(e) {
+        const newImage = reader.result
 
-    reader.onloadend = function(e) {
-      const newImage = reader.result
-      if (newImage) setImage(newImage)
-    }.bind(this);
-
-    handleOpen()
+        if (newImage) {
+          setImage(newImage)
+          setCropped(newImage)
+          updateImageCard(id, newImage)
+        }
+      }.bind(this);
+  
+      handleOpen()
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (
     <>
-      <Modal isOpen={open} onClose={handleClose}>
+      <Modal isOpen={open} onClose={updateCardImage} className='modal-container-upload-image'>
         <h2>Upload image</h2>
         <FixedCropper
+          onResizeEnd={onMoveEnd}
           onMoveEnd={onMoveEnd}
-          src={image}
+          src={image || MOCKUP_IMAGE}
           stencilSize={{
               width: 300,
               height: 300
@@ -67,7 +79,7 @@ const Card = (props) => {
           }}
           imageRestriction={ImageRestriction.stencil}
         />
-        <Button onClick={updateCardImage} variant='outlined' size="small">Set image</Button>
+        <Button className='setImageButton' onClick={updateCardImage} variant='outlined' size="large">Set image</Button>
       </Modal>
 
       <CardMui className="card-container">

@@ -19,6 +19,7 @@ const AddCardForm = ({ addCard, onTitleChange, onDescriptionChange }) => {
           label="Title"
           type="text"
           variant="standard"
+          size="medium"
           onChange={onTitleChange}
         />
       </Box>
@@ -28,6 +29,7 @@ const AddCardForm = ({ addCard, onTitleChange, onDescriptionChange }) => {
           id="input-description"
           label="Description"
           variant="standard"
+          size="medium"
           onChange={onDescriptionChange}
         />
       </Box>

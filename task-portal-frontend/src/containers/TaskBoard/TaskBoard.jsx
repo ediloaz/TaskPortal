@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react'
 
 import { CARDS_MOCKUP } from 'constants/card'
-import { getCards, addCard } from 'helpers/cards'
+import { getCards, addCard, updateImageCard } from 'helpers/cards'
 import { AuthContext } from 'context/authContext'
 
 import TaskBoardComponent from 'components/TaskBoard/TaskBoard'
@@ -46,9 +46,34 @@ const TaskBoard = () => {
       if (answer) updateCards()
     }
   }
+
+  const _updateImageCard = (id, base64) => {
+    // Update in backend
+    updateImageCard(id, base64)
+
+    // Update in UI
+    const updatedCards = { ...cards };
+
+    for (const listKey in updatedCards) {
+      if (updatedCards.hasOwnProperty(listKey)) {
+        const list = updatedCards[listKey];
+        const cardToUpdate = list.find((card) => card.id === id);
+
+        if (cardToUpdate) {
+          cardToUpdate.image = base64;
+          console.log(`Imagen actualizada para el objeto con ID ${id}`);
+
+          setCards(updatedCards);
+          return;
+        }
+      }
+    }
+  }
+
+  console.log(cards)
   
   return (
-    <TaskBoardComponent cards={cards} addNewCard={addNewCard} />
+    <TaskBoardComponent cards={cards} addNewCard={addNewCard} updateImageCard={_updateImageCard} />
   )
 }
 
